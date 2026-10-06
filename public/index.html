@@ -152,7 +152,7 @@ function render(){
   if(!c.e.length)h+='<tr><td colspan="6" class="cap">Поки що записів немає.</td></tr>';
   for(var i=c.e.length-1;i>=0;i--){var x=c.e[i];h+='<tr><td>'+fd(x.d)+'</td><td>'+esc(x.n)+'</td><td class="n m">'+(x.t||0)+'</td><td class="n m '+cl(x.p)+'">'+sg(x.p)+'</td><td class="n m">'+$(c.pts[i+1].b)+'</td>'+(canEdit?'<td><button class="x" data-i="'+S.sessions.indexOf(x)+'">✕</button></td>':'')+'</tr>'}
   h+='</table></div></div></div>';
-  h+='<div style="text-align:center;padding:6px 0 30px"><button class="x" id="lg">'+(canEdit?'Вийти':'Вхід')+'</button></div>';
+  h+='<div style="text-align:center;padding:6px 0 30px"><button class="s" id="lg">'+(canEdit?'Вийти':'Вхід')+'</button></div>';
   app.innerHTML=h;
   var lg=document.getElementById('lg');
   if(lg)lg.onclick=function(){if(canEdit){localStorage.removeItem('pw');pw='';canEdit=false;showSet=false;render()}else{var p=prompt('Пароль');if(p)login(p)}};
