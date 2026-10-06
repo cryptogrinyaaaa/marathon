@@ -72,9 +72,9 @@ var fd=function(s){var p=s.split('-');return+p[2]+' '+MN[+p[1]-1]};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function calc(){
   var e=S.sessions.slice().sort(function(a,b){return a.d<b.d?-1:a.d>b.d?1:0});
-  var b=S.start,T=0,P=0,pts=[{d:S.startDate,b:b,i:-1}];
-  e.forEach(function(x,i){b+=x.p;P+=x.p;T+=(x.t||0);pts.push({d:x.d,b:b,i:i})});
-  return{e:e,b:b,T:T,P:P,pts:pts};
+  var b=S.start,T=0,P=0,I=0,pts=[{d:S.startDate,b:b,i:-1}];
+e.forEach(function(x,i){b+=x.p;P+=x.p;T+=(x.t||0);I+=(x.bi||0);pts.push({d:x.d,b:b,i:i})});
+return{e:e,b:b,T:T,P:P,I:I,pts:pts};
 }
 function chart(all){
   var pts=all;
