@@ -27,7 +27,8 @@ header button{margin-left:auto}
 .who h2{margin:0;font-size:20px}
 .tag{background:var(--red);font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;vertical-align:middle;margin-left:6px}
 .who small{color:var(--mut)}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:520px){.tiles{grid-template-columns:repeat(2,1fr)}}
 .tile{background:#141414;border:1px solid var(--line);border-radius:10px;padding:12px;text-align:center}
 .tile small{display:block;color:var(--mut);font-size:11px;letter-spacing:1.5px;text-transform:uppercase}
 .tile b{display:block;font-size:clamp(22px,5vw,30px);margin:4px 0;font-weight:800}
