@@ -134,12 +134,12 @@ function bars(e){
 function render(){
   var c=calc(),pr=Math.min(100,Math.max(0,(c.b-S.start)/(S.goal-S.start)*100)),prf=c.b-S.start;
   var day=Math.max(1,Math.floor((new Date()-new Date(S.startDate+'T00:00:00'))/864e5)+1);
-  var last=c.e.length?c.e[c.e.length-1].d:null,avg=c.T?c.P/c.T:0;
+  var last=c.e.length?c.e[c.e.length-1].d:null,avg=c.T?c.P/c.T:0,roi=c.I>0?c.P/c.I*100:null;
   var h='<header><div class="logo">♠</div><div><b>'+esc(S.name)+' Marathon</b><small>марафон '+K(S.start)+C+' → '+K(S.goal)+C+'</small></div>'+(canEdit?'<button class="s" id="set">Налаштування</button>':'')+'</header>';
   h+='<div class="pg"><div class="t m"><span>ПРОГРЕС ДО '+K(S.goal)+C+'</span><span class="pc">'+pr.toFixed(2)+'%</span></div><div class="bar"><i style="width:'+pr+'%"></i></div></div><div class="w">';
   if(canEdit&&showSet)h+='<div class="card"><div class="hd"><h3>Налаштування</h3></div><form id="sf"><input name="name" value="'+esc(S.name)+'" placeholder="Нік"><input name="tag" value="'+esc(S.tag)+'" placeholder="Підпис"><input type="date" name="sd" value="'+S.startDate+'"><input type="number" name="st" value="'+S.start+'" placeholder="Старт"><input type="number" name="goal" value="'+S.goal+'" placeholder="Мета"><input name="cur" value="'+esc(C)+'" placeholder="Валюта" style="width:80px"><button>Зберегти</button></form><div style="margin-top:10px;font-size:13px">Фото: <input type="file" id="ph" accept="image/*"></div><div class="hint">Дата старту · стартовий банкролл · мета · валюта</div></div>';
   h+='<div class="card hero"><div class="who"><div class="av">'+(S.photo?'<img src="'+S.photo+'" alt="">':'♠')+'</div><div><h2>'+esc(S.name)+'<span class="tag">АВТОР</span></h2><small>'+esc(S.tag)+(last?' · остання сесія: '+fd(last):'')+'</small></div></div><div class="tiles">'+
-   tile('Банкролл',$(c.b),cl(prf)||'g','старт: '+$(S.start))+tile('Профіт',sg(c.P),cl(c.P)||'g','')+tile('День марафону','#'+day,'y','з '+fd(S.startDate)+' '+S.startDate.slice(0,4))+tile('Зіграно MTT',c.T.toLocaleString('uk-UA'),'','всього за марафон')+'</div></div>';
+   tile('Банкролл',$(c.b),cl(prf)||'g','старт: '+$(S.start))+tile('Профіт',sg(c.P),cl(c.P)||'g','')+tile('День марафону','#'+day,'y','з '+fd(S.startDate)+' '+S.startDate.slice(0,4))+tile('Зіграно MTT',c.T.toLocaleString('uk-UA'),'','всього за марафон')+tile('Завантаження',$(c.I),'','сума бай-інів')+tile('ROI',(roi===null?'—':(roi>0?'+':'')+roi.toFixed(1)+'%'),roi===null?'':cl(roi),'профіт / завантаження')+'</div></div>';
   h+='<div class="card"><div class="hd"><h3 class="m">📈 ГРАФІК МАРАФОНА</h3><div class="pills">'+pill('week','Тиждень')+pill('month','Місяць')+pill('all','Весь час')+'</div></div><div class="chart">'+chart(c.pts)+'</div><div class="cap">За вибраний період: <b class="m">'+c.e.length+'</b> сесій</div></div>';
   var bk=dpm(c),rem=avg>0?Math.ceil((S.goal-c.b)/avg):null,fi=bk;
   h+='<div class="card"><div class="hd"><h3>⚡ Долар з турніру</h3></div><div class="k3"><div><em>за весь марафон</em><b class="m '+cl(avg)+'">'+(avg>0?'+':'')+avg.toFixed(1)+C+'/MTT</b><small class="m">'+K(c.P)+C+' / '+c.T+' MTT</small></div><div><em>до '+K(S.goal)+C+' залишилось</em><b class="m">'+(rem?'~'+rem.toLocaleString('uk-UA'):'—')+' <small>турнірів</small></b></div><div><em>лінія тренда</em><b class="m '+cl(avg)+'">'+(avg>0?'+':'')+avg.toFixed(1)+C+'/MTT</b><small>середнє по всіх MTT</small></div></div>'+
@@ -147,7 +147,7 @@ function render(){
   var br=bars(c.e);
   h+='<div class="card"><div class="hd"><h3>♠ Турнірів за сесію</h3>'+(br.svg?'<span class="cap">середнє: <b class="m">'+br.avg+'</b> · остання: <b class="m y">'+br.last+'</b></span>':'')+'</div><div class="chart">'+(br.svg||br)+'</div></div>';
   if(canEdit){var t=new Date().toISOString().slice(0,10);
-    h+='<div class="card"><div class="hd"><h3>Додати сесію</h3></div><form id="f"><input type="date" name="d" value="'+t+'" required><input type="number" name="p" step="any" placeholder="Профіт (350 або -120)" required><input type="number" name="t" min="0" placeholder="К-сть MTT" required><input name="n" placeholder="Нотатка"><button>Додати</button></form><div class="hint">Форму бачиш лише ти. Якщо за день уже є сесія, запис додасться окремим рядком.</div></div>'}
+    h+='<div class="card"><div class="hd"><h3>Додати сесію</h3></div><form id="f"><input type="date" name="d" value="'+t+'" required><input type="number" name="p" step="any" placeholder="Профіт (350 або -120)" required><input type="number" name="t" min="0" placeholder="К-сть MTT" required><input type="number" name="bi" min="0" step="any" placeholder="Завантаження (бай-іни)"><input name="n" placeholder="Нотатка"><button>Додати</button></form><div class="hint">Форму бачиш лише ти. Якщо за день уже є сесія, запис додасться окремим рядком.</div></div>'}
   h+='<div class="card"><div class="hd"><h3>Історія сесій</h3></div><div class="tw"><table><tr><th>Дата</th><th>Нотатка</th><th class="n">MTT</th><th class="n">Профіт</th><th class="n">Банкролл</th>'+(canEdit?'<th></th>':'')+'</tr>';
   if(!c.e.length)h+='<tr><td colspan="6" class="cap">Поки що записів немає.</td></tr>';
   for(var i=c.e.length-1;i>=0;i--){var x=c.e[i];h+='<tr><td>'+fd(x.d)+'</td><td>'+esc(x.n)+'</td><td class="n m">'+(x.t||0)+'</td><td class="n m '+cl(x.p)+'">'+sg(x.p)+'</td><td class="n m">'+$(c.pts[i+1].b)+'</td>'+(canEdit?'<td><button class="x" data-i="'+S.sessions.indexOf(x)+'">✕</button></td>':'')+'</tr>'}
@@ -159,7 +159,7 @@ function render(){
   Array.prototype.forEach.call(app.querySelectorAll('[data-per]'),function(b){b.onclick=function(){per=b.dataset.per;render()}});
   var st=document.getElementById('st');if(st)st.onchange=function(){step=+st.value;render()};
   var f=document.getElementById('f');
-  if(f)f.onsubmit=function(ev){ev.preventDefault();var d=new FormData(f);S.sessions.push({d:d.get('d'),p:parseFloat(d.get('p')),t:parseInt(d.get('t'),10)||0,n:d.get('n')||''});save()};
+  if(f)f.onsubmit=function(ev){ev.preventDefault();var d=new FormData(f);S.sessions.push({d:d.get('d'),p:parseFloat(d.get('p')),t:parseInt(d.get('t'),10)||0,bi:parseFloat(d.get('bi'))||0,n:d.get('n')||''});save()};
   Array.prototype.forEach.call(app.querySelectorAll('button.x'),function(b){b.onclick=function(){if(b.dataset.arm){S.sessions.splice(+b.dataset.i,1);save()}else{b.dataset.arm=1;b.textContent='Видалити?'}}});
   var se=document.getElementById('set');
   if(se)se.onclick=function(){showSet=!showSet;render()};
